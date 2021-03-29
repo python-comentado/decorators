@@ -28,7 +28,7 @@ def save_image(username):
 # capaz de gerar a imagem que você encontrará no final desse post. Apesar
 # de estarmos lidando com requisições aqui, o objetivo deste post é
 # exemplificar um uso bastante comum de um padrão de projeto (aqui podemos 
-# interpretar como feature da linguagem) chamado# Decorator. Para fazer isso,
+# interpretar como feature da linguagem) chamado Decorator. Para fazer isso,
 # vamos medir o tempo de execução da função acima. Para medir o tempo, basta 
 # que seja feita a marcação do tempo de início, tempo de término e subtrair:
 start = time()  # tempo de início
