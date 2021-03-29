@@ -91,26 +91,23 @@ modified_save_image("python-comentado")
 # ser resumido em:
 
 def timeit(some_function):
-    
     def wrapper(*args, **kwargs):
         start = time()
         result = some_function(*args, **kwargs)
         end = time()
         print(f"Tempo gasto: {round(end - start, 3)} s")
         return result
-        
     return wrapper
 
 @timeit
 def save_image(username):
-
     url = f"https://www.github.com/{username}.png"
     response = requests.get(url)  # requisição do tipo GET na url
     filename = f"{username}.png"
-
     with open(filename, mode='wb+') as image_file:
         image_file.write(response.content)
 
-# Por fim, a  chamada de save_image agora faz exatamente o que queríamos:
+# Por fim, a chamada de save_image agora faz exatamente o que queríamos, sem a 
+# necessidade de nenhuma "gambiarra" ou variável nova:
 save_image("python-comentado") 
 # Tempo gasto: 1.878 s
