@@ -72,19 +72,11 @@ print(type(modified_save_image)) # <class 'function'>
 # start no cronômetro, download da imagem, salvamento do arquivo, stop no 
 # cronômetro e exibição do tempo gasto na operação.
 modified_save_image("python-comentado")
+```
 
-# Se você chegou até aqui, talvez esteja se perguntando se tudo realmente
-# deixa o código melhor ou se isso tudo é vantajoso, uma vez que tivemos que
-# criar a variável "modified_save_image" e teríamos que criar uma para cada
-# nova função com a feature de medir tempo. De fato, isso é também é 
-# desagradável e não é tão vantajoso quanto esperávamos quando pensamos
-# em fazer uma melhoria lá atrás. Pensando nisso, assim como em diversas outras
-# linguagens de programação existe o padrão de Decorators. A função "timeit"
-# definida acima é um Decorator simples que pode ser aplicado a qualquer
-# função com um simples "@timeit" antes da definição, sem a necessidade de criar
-# uma nova variável. Desse modo, tudo o que fizemos até aqui poderia 
-# ser resumido em:
+Se você chegou até aqui, talvez esteja se perguntando se tudo realmente deixa o código melhor ou se isso tudo é vantajoso, uma vez que tivemos que criar a variável "modified_save_image" e teríamos que criar uma para cada nova função com a feature de medir tempo. De fato, isso é também é  desagradável e não é tão vantajoso quanto esperávamos quando pensamos em fazer uma melhoria lá atrás. Pensando nisso, assim como em diversas outras linguagens de programação existe o padrão de Decorators. A função **`timeit`** definida acima é um Decorator simples que pode ser aplicado a qualquer função com um simples `@timeit` antes da definição, sem a necessidade de criar uma nova variável. Desse modo, tudo o que fizemos até aqui poderia  ser resumido em:
 
+```python
 def timeit(some_function):
     def wrapper(*args, **kwargs):
         start = time()
@@ -106,4 +98,38 @@ def save_image(username):
 # necessidade de nenhuma "gambiarra" ou variável nova:
 save_image("python-comentado") 
 # Tempo gasto: 1.878 s
+```
+
+
+No caso mostrado anteriormente, @timeit é um Decorator. Para que um decorator funcione, ele deve ser um objeto (possivelmente uma função) que recebe uma função no construtor e implementa o método `__call__`. Com isso, uma outra maneira ainda mais _"poderosa"_ de definir o Decorator **Timeit** seria:
+
+```python
+class Timeit(object):
+    def __init__(self, callable):
+        # ... faz alguma coisa com a entrada callable
+        self.callable = callable
+    
+    def __call__(self, *args, **kwargs):
+        start = time()
+        self.callable(*args, **kwargs)
+        end = time()
+        delta_t = round(end - start, 3)
+        # funções em python são objetos e objetos em python
+        # costumam ter o atributo __name__ que retorna o nome pelo
+        # qual chamamos o objeto. Se a função salva em self.callable for
+        # "save_image", é essa string que será devolvida por 
+        # self.callable.__name__
+        print(f"{self.callable.__name__} | Tempo gasto: {delta_t} s")
+
+
+@Timeit
+def save_image(username):
+    url = f"https://www.github.com/{username}.png"
+    response = requests.get(url)  # requisição do tipo GET na url
+    filename = f"{username}.png"
+    with open(filename, mode='wb+') as image_file:
+        image_file.write(response.content)
+
+save_image("python-comentado")
+# save_image | Tempo gasto: 1.874 s
 ```

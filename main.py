@@ -111,3 +111,37 @@ def save_image(username):
 # necessidade de nenhuma "gambiarra" ou variável nova:
 save_image("python-comentado") 
 # Tempo gasto: 1.878 s
+
+
+# No caso mostrado anteriormente, @timeit é um Decorator. Para que ele funcione,
+# ele deve ser um objeto (possivelmente uma função) que recebe uma função
+# no construtor e implementa o método __call__. Com isso, uma outra maneira
+# ainda mais "poderosa" de definir o Decorator Timeit seria:
+class Timeit(object):
+    def __init__(self, callable):
+        # ... faz alguma coisa com a entrada callable
+        self.callable = callable
+    
+    def __call__(self, *args, **kwargs):
+        start = time()
+        self.callable(*args, **kwargs)
+        end = time()
+        delta_t = round(end - start, 3)
+        # funções em python são objetos e objetos em python
+        # costumam ter o atributo __name__ que retorna o nome pelo
+        # qual chamamos o objeto. Se a função salva em self.callable for
+        # "save_image", é essa string que será devolvida por 
+        # self.callable.__name__
+        print(f"{self.callable.__name__} | Tempo gasto: {delta_t} s")
+
+
+@Timeit
+def save_image(username):
+    url = f"https://www.github.com/{username}.png"
+    response = requests.get(url)  # requisição do tipo GET na url
+    filename = f"{username}.png"
+    with open(filename, mode='wb+') as image_file:
+        image_file.write(response.content)
+
+save_image("python-comentado")
+# save_image | Tempo gasto: 1.874 s
