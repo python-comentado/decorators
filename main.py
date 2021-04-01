@@ -13,7 +13,7 @@ def save_image(username):
     url = f"https://www.github.com/{username}.png"
     response = requests.get(url)  # requisição do tipo GET na url
     # agora podemos salvar o conteúdo (content) da resposta acima
-    # em um arquivo de image. Para isso, vamos usar f-string novamente:
+    # em um arquivo de imagem. Para isso, vamos usar f-string novamente:
     filename = f"{username}.png"
     # mode="wb+" é o modo de interação.
     # w -> write  (escrever)
